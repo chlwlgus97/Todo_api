@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crud.todo.mapper.TodoMapper">
+
+    <resultMap id="TodoMap" type="com.crud.todo.model.GetTodoResVO">
+        <result property="idx" column="idx"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="done" column="done"/>
+        <result property="created_time" column="created_time"/>
+        <result property="updated_time" column="updated_time"/>
+    </resultMap>
+
+    <select id="getTodo" resultMap="TodoMap">
+        SELECT
+            idx,
+            title,
+            content,
+            done,
+            created_time,
+            updated_time
+        FROM tododb.todo
+        WHERE 1 = 1
+        ORDER BY created_time;
+    </select>
+
+    <insert id="createTodo" parameterType="com.crud.todo.model.CreateTodoReqVO">
+        INSERT INTO tododb.todo (title, content, done, created_time, updated_time)
+        VALUES (#{title}, #{content}, #{done}, NOW(), NOW())
+    </insert>
+    
+    <update id="modifyTodo" parameterType="com.crud.todo.model.ModifyTodoReqVO">
+        UPDATE tododb.todo
+        SET title = #{title},
+            done = #{done},
+            updated_time = NOW()
+        WHERE idx = #{idx}
+    </update>
+
+    <delete id="removeTodo" parameterType="com.crud.todo.model.RemoveTodoReqVO">
+        DELETE FROM tododb.todo WHERE title = #{title} AND idx = #{idx}
+    </delete>
+
+</mapper>
